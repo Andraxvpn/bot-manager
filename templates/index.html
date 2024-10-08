@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bot Manager</h1>
+        
+        <!-- Form untuk upload bot -->
+        <div class="upload-section">
+            <h2>Upload Bot Baru</h2>
+            <form id="upload-bot-form" action="/upload_bot" method="POST" enctype="multipart/form-data">
+                <label for="bot-name">Nama Bot:</label>
+                <input type="text" id="bot-name" name="bot_name" placeholder="Masukkan nama bot..." required>
+
+                <label for="bot-file">Pilih File Bot (misal .py, .js):</label>
+                <input type="file" id="bot-file" name="bot_file" accept=".py,.js" required>
+
+                <label for="dependencies">Dependencies (opsional):</label>
+                <textarea id="dependencies" name="dependencies" placeholder="Misal: numpy, pandas (untuk Python) atau express (untuk Node.js)"></textarea>
+
+                <button type="submit">Upload Bot</button>
+            </form>
+        </div>
+
+        <!-- Tabel Daftar Bot -->
+        <div class="bot-list-section">
+            <h2>Daftar Bot</h2>
+            <table id="bot-table">
+                <thead>
+                    <tr>
+                        <th>Nama Bot</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bot in bots %}
+                    <tr>
+                        <td>{{ bot['name'] }}</td>
+                        <td id="bot-{{ bot['id'] }}-status">{{ bot['status'] }}</td>
+                        <td>
+                            <button onclick="runBot({{ bot['id'] }})">Run</button>
+                            <button onclick="stopBot({{ bot['id'] }})">Stop</button>
+                            <button onclick="viewLogs({{ bot['id'] }})">Lihat Log</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
