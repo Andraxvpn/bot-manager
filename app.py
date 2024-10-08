@@ -66,5 +66,17 @@ def stop_bot(bot_id):
 @app.route('/view_logs/<int:bot_id>', methods=['GET'])
 def view_logs(bot_id):
     # Logika untuk mengambil log bot
-    log_file_path =
-  
+    log_file_path = os.path.join(BOT_LOGS_DIR, f'bot_{bot_id}_log.txt')
+    if os.path.exists(log_file_path):
+        with open(log_file_path, 'r') as log_file:
+            logs = log_file.read()
+    else:
+        logs = f'No logs available for bot {bot_id}.'
+    return jsonify({'logs': logs})
+
+if __name__ == '__main__':
+    if not os.path.exists(BOT_FILES_DIR):
+        os.makedirs(BOT_FILES_DIR)
+    if not os.path.exists(BOT_LOGS_DIR):
+        os.makedirs(BOT_LOGS_DIR)
+    app.run(debug=True)
